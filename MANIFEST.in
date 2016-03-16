@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include livechat *.css
+recursive-include livechat *.csv
+recursive-include livechat *.html
+recursive-include livechat *.ico
+recursive-include livechat *.js
+recursive-include livechat *.json
+recursive-include livechat *.md
+recursive-include livechat *.png
+recursive-include livechat *.py
+recursive-include livechat *.svg
+recursive-include livechat *.txt
+recursive-exclude livechat *.pyc
