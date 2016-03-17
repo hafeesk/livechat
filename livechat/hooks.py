@@ -9,7 +9,7 @@ app_icon = "octicon octicon-file-directory"
 app_color = "'green'"
 app_email = "support@semilimes.com"
 app_version = "0.0.1"
-app_license = "GNU"
+app_license = "GNU GENERAL PUBLIC LICENSE v3"
 
 # Includes in <head>
 # ------------------

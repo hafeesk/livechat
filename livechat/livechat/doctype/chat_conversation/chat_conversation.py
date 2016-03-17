@@ -32,11 +32,19 @@ def get_chat_agents(doctype, txt, searchfield, start, page_len, filters):
 	''')
 
 @frappe.whitelist(allow_guest=True)
-def create_chat_conversation(user, ip):
-	# FIXME: The ip should be passed
-	ip = frappe.local.request_ip
+def create_chat_conversation():
+	# TODO
+	# We should check that guest users don't create many chats from the same IP
+	#ip = frappe.local.request_ip
+	# Creates a new conversation and adds the attributes
+	conversation = frappe.new_doc("Chat Conversation")
+	# TODO: The chat agent should be selected under certains conditions (randomly/by their schedule/by their work load..)
+	conversation.chat_agent = "agent1@semilimes.com"
+	# TODO: The chat user should be selected depending if it is a guest or an internal user
+	conversation.chat_user = "chatuser1@semilimes.com"
+	conversation.insert()
 
-	return
+	return conversation.name
 
 
 

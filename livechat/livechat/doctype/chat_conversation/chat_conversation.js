@@ -5,17 +5,23 @@ frappe.ui.form.on('Chat Conversation', {
 
 	refresh: function(frm) {
 
+        // Displays the users with the role Chat User on the select field.
         cur_frm.set_query("chat_user", function() {
             return {
                 query: "livechat.livechat.doctype.chat_conversation.chat_conversation.get_chat_users"
             };
         });
 
+        // Displays the users with the role Agent User on the select field.
         cur_frm.set_query("chat_agent", function() {
             return {
                 query: "livechat.livechat.doctype.chat_conversation.chat_conversation.get_chat_agents"
             };
         });
+
+        // Hides the current user (name) in the form
+        frm.toggle_display("chat_user", frm.doc.chat_user!=user);
+        frm.toggle_display("chat_agent", frm.doc.chat_agent!=user);
 	},
 });
 
@@ -52,9 +58,12 @@ cur_frm.cscript.send_button = function(doc) {
       add_message(message_text, sender, date_sent, parent_conversation, doc);
       // Refresh the page and reloads the doc to show the message.
       reload_doc_form();
+   } else {
+      frappe.msgprint('Please, enter a message.');
    }
 }
 
+// Add a message to the conversation
 function add_message(message_text, sender, date_sent, parent_conversation, doc){
     return frappe.call({
 		method: "livechat.livechat.doctype.livechat_message.livechat_message.add_message",
@@ -82,6 +91,7 @@ function add_message(message_text, sender, date_sent, parent_conversation, doc){
 	});
 }
 
+// FIXME: Set the messages as seen (globally)
 function set_messages_as_seen(doc){
     return frappe.call({
         method: "livechat.livechat.doctype.livechat_message.livechat_message.mark_messages_as_seen",

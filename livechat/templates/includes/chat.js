@@ -18,7 +18,12 @@ frappe.ready(function(){
 
 
      $('.btn-create-conversation').off("click").on("click", function(){
-
-
+        return frappe.call({
+            method: "livechat.livechat.doctype.chat_conversation.chat_conversation.create_chat_conversation",
+            args: { user: user },
+            callback: function(r){
+                frappe.msgprint("Conversation created: " + r.message);
+            }
+        });
      });
 });
