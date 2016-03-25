@@ -31,8 +31,10 @@ cur_frm.cscript.refresh = function(doc, cdt, cdn) {
 }
 
 // Listen to the event livechat_update and calls to reload the doc
-frappe.realtime.on("livechat_update",function(data){
-    reload_doc_form();
+frappe.realtime.on("new_livechat_message", function(data){
+    if(data.parent == cur_frm.docname){
+        reload_doc_form();
+    }
 });
 
 // Reloads the doc and refresh the form

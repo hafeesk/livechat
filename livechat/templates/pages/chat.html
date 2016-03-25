@@ -9,12 +9,15 @@
     <div class="col-md-8">
 
         <div class="form-group">
+            <input class="form-control" name="email" type="email" placeholder="Insert your email" />
+        </div>
+
+        <div class="form-group">
             <button class="btn btn-success btn-create-conversation">Create Conversation</button>
         </div>
 
         <div class="form-group">
-             <textarea class="form-control" name="history" rows="15" readonly>User connected: {{ user }}
-             </textarea>
+             <textarea class="form-control" id="history" name="history" rows="15" readonly></textarea>
         </div>
 
         <div class="form-group">
@@ -31,5 +34,22 @@
 
 <script>
 	{% include "templates/includes/chat.js" %}
+</script>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect("http://localhost:3000");
+    var text_area_msg = document.getElementById("history");
+
+    socket.on("new_livechat_message", function(data){
+        text_area_msg.value += "\n";
+
+        var d = data.date_sent.split(/[- T : . Z]/);
+        console.log(date);
+        var date = new Date(d[0], d[1], d[2], d[3], d[4], d[5]);
+
+        text_area_msg.value += date + " - ";
+        text_area_msg.value += data.sender + ": ";
+        text_area_msg.value += data.text;
+    });
 </script>
 {% endblock %}

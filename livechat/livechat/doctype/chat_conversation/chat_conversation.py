@@ -32,7 +32,7 @@ def get_chat_agents(doctype, txt, searchfield, start, page_len, filters):
 	''')
 
 @frappe.whitelist(allow_guest=True)
-def create_chat_conversation():
+def create_chat_conversation(user):
 	# TODO
 	# We should check that guest users don't create many chats from the same IP
 	#ip = frappe.local.request_ip

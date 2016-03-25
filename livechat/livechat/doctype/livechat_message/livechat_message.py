@@ -25,10 +25,11 @@ class LivechatMessage(Document):
 		# Obtains the conversation linked to this Livechat Message
 		conversation = frappe.get_doc('Chat Conversation', self.parent)
 		# Sends new comment to listening clients so they get a realtime update
-		frappe.publish_realtime('new_message', self.as_dict(),
+		'''frappe.publish_realtime('new_livechat_message', self.as_dict(),
 				doctype= 'Chat Conversation', docname = conversation.name,
+				after_commit=True)'''
+		frappe.publish_realtime('new_livechat_message', self.as_dict(),
 				after_commit=True)
-		frappe.publish_realtime(event='livechat_update', message='''{u'doctype': u'Livechat Message'}''')
 
 	# Clear the notifications of the doctype after update them
 	def on_update(self):
