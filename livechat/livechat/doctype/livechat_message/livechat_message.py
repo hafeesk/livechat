@@ -21,14 +21,11 @@ class LivechatMessage(Document):
 	def after_insert(self):
 		if not (self and self.name):
 			return
-
 		# Obtains the conversation linked to this Livechat Message
 		conversation = frappe.get_doc('Chat Conversation', self.parent)
-		# Sends new comment to listening clients so they get a realtime update
-		'''frappe.publish_realtime('new_livechat_message', self.as_dict(),
-				doctype= 'Chat Conversation', docname = conversation.name,
-				after_commit=True)'''
-		frappe.publish_realtime('new_livechat_message', self.as_dict(),
+		# Sends notification to listening clients so they get a realtime update
+		conv_hash = conversation.name + "." + conversation.random_id;
+		frappe.publish_realtime(conv_hash, self.as_dict(),
 				after_commit=True)
 
 	# Clear the notifications of the doctype after update them
@@ -36,10 +33,10 @@ class LivechatMessage(Document):
 		clear_doctype_notifications(self)
 
 
-@frappe.whitelist()
-def add_message(doc):
+@frappe.whitelist(allow_guest=True)
+def add_message(doc, client_call=False):
 	'''
-	Add a message to the database
+	Adds a message to the database
 	:param doc: json with the required data to create a doctype Livechat Message
 	:return:
 	'''
@@ -47,12 +44,17 @@ def add_message(doc):
 	json_doc = json.loads(doc)
 
 	# Extracts the conversation to obtain the id of the last message from the database
-	conversation = json_doc['parent']
-	last_id = get_last_id(conversation)
+	conversation_name = json_doc['parent']
+	last_id = get_last_id(conversation_name)
 
 	# Adds one to the id to set the following message
 	json_doc['idx'] = last_id + 1
 	#print  json.dumps(json_doc, indent=4, sort_keys=True)
+
+	# If this method is called by the client, the sender is set automatically as the chat user
+	if(client_call):
+		conversation_doc = frappe.get_doc('Chat Conversation', conversation_name)
+		json_doc['sender'] = conversation_doc.chat_user
 
 	# Creates the doctype from the json data
 	doc = frappe.get_doc(json_doc)
@@ -66,6 +68,37 @@ def add_message(doc):
 
 	return doc.as_dict()
 
+@frappe.whitelist(allow_guest=True)
+def send_client_message(doc, hash):
+	'''
+	Adds a message to the database from the client app
+	:param doc: json with the required data to create a doctype Livechat Message
+	:param hash: conversation name + unique hash
+	:return:
+	'''
+	# Checks if the message is legit comparing the unique hash of the conversation
+	if not(check_conversation_hash(hash)):
+		frappe.msgprint("Your message could not be sent", raise_exception=1)
+	# Adds the message
+	add_message(doc, True)
+
+def check_conversation_hash(hash):
+	'''
+	Checks if the unique hash of the conversation is correct
+	:param hash: covnersation name + unique hash
+	:return:
+	'''
+	# Divides into conversation name, hash
+	conversation_name = hash.split(".")
+	# Obtains the conversation doc
+	conversation = frappe.get_doc('Chat Conversation', conversation_name[0])
+	# Obtains the real hash
+	real_hash = conversation_name[0] + "." + conversation.random_id
+	# Compares if they are equals
+	if(real_hash != hash):
+		return False
+	else:
+		return True
 
 @frappe.whitelist()
 def get_last_id(conversation):
@@ -94,10 +127,6 @@ def mark_messages_as_seen(conversation):
 	'''
 	frappe.db.sql("""update `tabLivechat Message` set seen=1
 		where seen=0 and parent = %s""", (conversation,))
-
-@frappe.whitelist(allow_guest=True)
-def echo(text):
-    frappe.msgprint(text)
 
 
 

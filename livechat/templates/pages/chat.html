@@ -31,25 +31,28 @@
     </div>
 </div>
 
-
-<script>
-	{% include "templates/includes/chat.js" %}
-</script>
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script>
     var socket = io.connect("http://localhost:3000");
     var text_area_msg = document.getElementById("history");
 
-    socket.on("new_livechat_message", function(data){
-        text_area_msg.value += "\n";
+    function setListener(event){
+        socket.on(event, function(data){
+            // Formats the message and prints it on the text area
+            text_area_msg.value += "\n";
+            var d = data.date_sent.split(/[- T : . Z]/);
+            console.log(date);
+            var date = new Date(d[0], d[1], d[2], d[3], d[4], d[5]);
+            var msg_frm = date + " - " + data.sender + ": " + data.text;
+            text_area_msg.value += msg_frm;
 
-        var d = data.date_sent.split(/[- T : . Z]/);
-        console.log(date);
-        var date = new Date(d[0], d[1], d[2], d[3], d[4], d[5]);
+            // Scroll down the text area when a new message is received
+            $('#history').scrollTop($('#history').height());
+        });
+    }
 
-        text_area_msg.value += date + " - ";
-        text_area_msg.value += data.sender + ": ";
-        text_area_msg.value += data.text;
-    });
+</script>
+<script>
+	{% include "templates/includes/chat.js" %}
 </script>
 {% endblock %}
