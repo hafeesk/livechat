@@ -31,9 +31,16 @@
     </div>
 </div>
 
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script>
-    var socket = io.connect("http://localhost:3000");
+    var socket;
+    if (window.location.protocol == "https:") {
+   		socket = io.connect(get_host(), {secure: true});
+	}
+	else if (window.location.protocol == "http:") {
+		socket = io.connect(get_host());
+	}
+
     var text_area_msg = document.getElementById("history");
 
     function setListener(event){
@@ -41,7 +48,7 @@
             // Formats the message and prints it on the text area
             text_area_msg.value += "\n";
             var d = data.date_sent.split(/[- T : . Z]/);
-            console.log(date);
+
             var date = new Date(d[0], d[1], d[2], d[3], d[4], d[5]);
             var msg_frm = date + " - " + data.sender + ": " + data.text;
             text_area_msg.value += msg_frm;
@@ -50,6 +57,19 @@
             $('#history').scrollTop($('#history').height());
         });
     }
+
+    function get_host() {
+		var host = window.location.origin;
+		if(window.dev_server) {
+			var parts = host.split(":");
+			var port = '3000';
+			if(parts.length > 2) {
+				host = parts[0] + ":" + parts[1];
+			}
+			host = host + ":" + port;
+		}
+		return host;
+	}
 
 </script>
 <script>

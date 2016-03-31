@@ -9,7 +9,7 @@ frappe.listview_settings['Chat Conversation'] = {
 
 	setup_filters: function(){
 	    if (user != "Administrator"){
-            // Default Filters
+            // Checks if the current user has the role Agent User
             var agent = $.inArray("Agent User", user_roles)
             // If the user is an agent, then we apply to filter the conversations by agent
             if(agent != -1){
