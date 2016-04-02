@@ -9,5 +9,4 @@ def get_context(context):
     return {
         "user": user
     }
-def update_chat():
-    return
+

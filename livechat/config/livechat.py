@@ -19,9 +19,10 @@ def get_data():
 			"icon": "icon-star",
 			"items": [
 				{
-					"type": "doctype",
-					"name": "User",
-					"description": _("List of agents.")
+					"type": "report",
+					"name":"List of agents",
+					"doctype": "User",
+					"is_query_report": True,
 				},
 			]
 		}

@@ -40,6 +40,23 @@ def get_chat_agents(doctype, txt, searchfield, start, page_len, filters):
 		select name from `tabUser` where name in (select parent from `tabUserRole` where role = 'Agent User')
 	''')
 
+def get_chat_agents_logged():
+	'''
+	Obtains the chat agents who are connected (Excludes the administrator)
+	:return: name of the agents
+	'''
+	return frappe.db.sql('''
+		select name
+		from tabUser
+		where enabled=1 and
+		ifnull(user_type, '') != 'Website User' and
+		name in (select parent from tabUserRole where role = 'Agent User') and
+		(select count(*) from tabSessions where user=tabUser.name
+		and timediff(now(), lastupdate) < time("01:00:00")) = 1
+		and name != 'Administrator'
+	''')
+
+
 @frappe.whitelist(allow_guest=True)
 def create_chat_conversation(user):
 	'''
@@ -50,11 +67,14 @@ def create_chat_conversation(user):
 	# Creates a new conversation and adds the attributes
 	conversation = frappe.new_doc("Chat Conversation")
 	# Selects a random chat agent
-	chat_agents = get_chat_agents("","","","","","")
+	chat_agents = get_chat_agents_logged()
 	agents = []
+	# Checks if there are agents stored on the system
+	if not(len(chat_agents)>0):
+		frappe.msgprint("It was not possible to create a new conversation. "
+						"There are not agents on the system or all of them are offline.", raise_exception=1)
 	for agent in chat_agents:
-		if(agent[0] != 'Administrator'):
-			agents.append(agent[0])
+		agents.append(agent[0])
 	conversation.chat_agent = random.choice(agents)
 	# Sets the conversation user
 	conversation.chat_user = user
