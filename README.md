@@ -11,18 +11,30 @@ GNU GENERAL PUBLIC LICENSE (v3)
 
 ### Installation
 
-1.) in the command line
+1. In the command line
 
-    home/frappe/frappe-bench/
-    bench get-app livechat https://github.com/semilimes/livechat
+    `home/frappe/frappe-bench/`
+    `bench get-app livechat https://github.com/semilimes/livechat`
 
-2.) in the ERPNext GUI
+2. In the ERPNext GUI
 
 - Type "App Installer" in the 'awesome bar' (on the Top right) and open it
 - find the "livechat" app & click on 'install'
 
 
 ### Instructions
+
+##### Roles
+There are two roles for the Livechat APP that should be configured for the users of the APP in order to use
+it from ERPNext. These roles are:
+
+- **Agent User**. The Agents are the workers of the company that should answer the questions that the customers
+will make through the Livechat APP. Agents have permissions to Read, Write, Create and Delete Conversations.
+Have in mind that in order to start any new Conversation is necessary that you add this role to one or more
+users and that this user will be online.
+
+- **Chat User**. The Chat Users are the customers that will have an account created on the company's system. Chat
+Users have permissions to Read, Write and Create Conversations.
 
 ##### Client
 

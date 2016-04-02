@@ -2,10 +2,10 @@
 Configuration for docs
 """
 
-# source_link = "https://github.com/[org_name]/livechat"
+source_link = "https://github.com/semilimes/livechat"
 # docs_base_url = "https://[org_name].github.io/livechat"
-# headline = "App that does everything"
-# sub_heading = "Yes, you got that right the first time, everything"
+headline = "A Livechat APP for ERPNext"
+sub_heading = "Let your customers communicate with your company in realtime."
 
 def get_context(context):
 	context.brand_html = "LiveChat"
