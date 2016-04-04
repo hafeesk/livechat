@@ -12,7 +12,10 @@ GNU GENERAL PUBLIC LICENSE (v3)
 ### Installation
 
 1. In the command line
+<<<<<<< HEAD
 
+=======
+>>>>>>> eae53d7952268aab28986e51d658588ce74184ac
 ```
 home/frappe/frappe-bench/
 bench get-app livechat https://github.com/semilimes/livechat
