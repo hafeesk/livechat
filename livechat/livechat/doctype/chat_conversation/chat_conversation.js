@@ -6,7 +6,7 @@ frappe.ui.form.on('Chat Conversation', {
 	refresh: function(frm) {
 
         // Displays the users with the role Chat User on the select field.
-        frappe.call({
+        /*frappe.call({
             method: 'livechat.livechat.doctype.chat_conversation.chat_conversation.get_chat_users',
             callback: function(res){
                 var options = [];
@@ -21,7 +21,7 @@ frappe.ui.form.on('Chat Conversation', {
 			        frm.doc.name).options = options.join("\n");
                 cur_frm.refresh_field("chat_user");
             }
-        });
+        });*/
 
         // Displays the users with the role Agent User on the select field.
         cur_frm.set_query("chat_agent", function() {

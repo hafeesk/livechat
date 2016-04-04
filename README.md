@@ -13,8 +13,10 @@ GNU GENERAL PUBLIC LICENSE (v3)
 
 1. In the command line
 
-    `home/frappe/frappe-bench/`
-    `bench get-app livechat https://github.com/semilimes/livechat`
+```
+home/frappe/frappe-bench/
+bench get-app livechat https://github.com/semilimes/livechat
+```
 
 2. In the ERPNext GUI
 
